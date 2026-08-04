@@ -47,7 +47,7 @@ def render ():
 
         current_n = int(round(10 ** st.session_state["log_n_val"]))
 
-        st.write(f"**Number of Tosses (N):** `{current_n:,}`")
+        st.info(f"**Number of Tosses (N):** `{current_n:,}`")
         log_n = st.slider(
             "Number of Tosses (N)",
             min_value=1.0,
@@ -176,8 +176,8 @@ def render ():
     # DISPLAY (Direct Streamlit Pyplot Calls)
     # ==========================================
 
-    with st.container (key="prob_box_2"):
-        st.markdown (f'**number of samples: {n_samples}**')
+    # with st.container (key="prob_box_2"):
+    #     st.markdown (f'**number of samples: {n_samples}**')
 
     st.divider()
     st.pyplot(fig1)

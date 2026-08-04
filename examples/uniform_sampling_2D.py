@@ -39,18 +39,6 @@ def render ():
     </style>
     """, unsafe_allow_html=True)
 
-    with st.container (key="prob_box"):
-        st.latex(
-            r"""
-            (X, Y) \sim \mathcal{U}([x_{\min}, x_{\max}] \times [y_{\min}, y_{\max}]) 
-            \implies f(x, y) = 
-            \begin{cases} 
-              \frac{1}{\Delta x ~\Delta y} & \text{for } x, y \in \text{Domain} \\[8pt]
-              0 & \text{otherwise} 
-            \end{cases}
-        """
-        )
-
     # --- Controls (Only N, Bins, and Seed) ---
     col1, col2 = st.columns(2)
 
@@ -61,7 +49,6 @@ def render ():
             st.session_state["log_n_val_2d"] = 2.0
 
         current_n = int(round(10 ** st.session_state["log_n_val_2d"]))
-        st.write(f"**Number of Events (N):** `{current_n:,}`")
 
         log_n = st.slider(
             "Number of Events (N)",
@@ -73,6 +60,8 @@ def render ():
             label_visibility="collapsed",
         )
         n_samples = int(round(10**log_n))
+
+        st.info(f"**Number of Events (N):** `{current_n:,}`")
 
     with col2:
         n_bins = st.slider(
@@ -267,8 +256,8 @@ def render ():
     # ==========================================
 
 
-    with st.container (key="prob_box_2"):
-        st.markdown (f'**number of samples: {n_samples}**')
+    # with st.container (key="prob_box_2"):
+    #     st.markdown (f'**number of samples: {n_samples}**')
 
     col3, col4 = st.columns([1.0, 1.18])
 
@@ -276,6 +265,19 @@ def render ():
         st.pyplot (fig1)
     with col4:
         st.pyplot (fig3)
+
+    with st.container (key="prob_box"):
+        st.latex(
+            r"""
+            (X, Y) \sim \mathcal{U}([x_{\min}, x_{\max}] \times [y_{\min}, y_{\max}]) 
+            \implies f(x, y) = 
+            \begin{cases} 
+              \frac{1}{\Delta x ~\Delta y} & \text{for } x, y \in \text{Domain} \\[8pt]
+              0 & \text{otherwise} 
+            \end{cases}
+        """
+        )
+
 
     # st.pyplot(fig2)
     # st.divider()
