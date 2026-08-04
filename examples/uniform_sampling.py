@@ -12,7 +12,7 @@ def get_marker_style(n_samples: int) -> tuple[float, float]:
 
 
 def render ():
-    st.header("Uniform sample in 1D")
+    st.header("Uniform sampling in 1D")
 
     # background-color: #fff9c4; /* yellow */
     st.markdown ("""
@@ -159,7 +159,7 @@ def render ():
             linewidth=2,
             label="Theoretical PDF $f(x)$",
         )
-        ax3.set_ylim(0, pdf_height * 1.25)
+        # ax3.set_ylim(0, pdf_height * 1.25)
 
     ax3.set_xlim(x_lims)
     ax3.set_xlabel("Value (X)")
@@ -178,9 +178,11 @@ def render ():
 
     with st.container (key="prob_box_2"):
         st.markdown (f'**number of samples: {n_samples}**')
+
     st.divider()
     st.pyplot(fig1)
     st.divider()
+    st.header("Histogram representation")
     st.pyplot(fig2)
     st.divider()
     st.pyplot(fig3)
@@ -196,7 +198,6 @@ def render ():
             \end{cases}
         """
         )
-
 
 
 if __name__ == "__main__":
