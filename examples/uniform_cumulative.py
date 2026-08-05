@@ -115,6 +115,11 @@ def render ():
         label=r"cumulative probability",
     )
 
+
+    ax4.axvline (x=a, color = 'tomato', linestyle = '--', label = 'x min')
+    ax4.axvline (x=b, color = 'tomato', linestyle = '--', label = 'x max')
+    ax4.axhline (y=-0.05, color='gray', linestyle='--', linewidth=1)
+
     y_jitter = np.full (n_samples, -0.05)
 
     ax4.scatter(

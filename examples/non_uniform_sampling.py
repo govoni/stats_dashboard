@@ -1,5 +1,4 @@
 ''' TODO
-- per la distribuzione non uniforme, mostra anche la cumulativa
 - fare anche la cumulativa con l'istogramma, mostra che sono leggermente diverse
 - aggiungi sturges per il numero di bin (suggerimento)
 - aggiungi slider che cambia il range di visualizzazione dell'istogramma
@@ -81,35 +80,50 @@ def render ():
     x_lims = (a - 1.5, b + 1.5)
 
     # ==========================================
-    # DRAWING 1: 1D Scatter Points
+    # Empirical CDF built with Heaviside Steps \Theta(x - X_i)
     # ==========================================
-    fig1, ax1 = plt.subplots(figsize=(10, 1.8))
-    # y_jitter = np.random.uniform(-0.1, 0.1, size=n_samples)
-    y_jitter = np.zeros (n_samples)
 
-    ax1.scatter(
+    fig4, ax4 = plt.subplots(figsize=(10, 3.5))
+
+    # Sort the sample to evaluate the empirical step function
+    x_sorted = np.sort(samples)
+
+    # 1. Empirical CDF using Heaviside Step Function: \hat{F}_N(x) = (1/N) * \sum \Theta(x - X_i)
+    # Matplotlib's step plot with `where='post'` draws horizontal lines followed by jumps,
+    # which exactly matches the sum of right-continuous \Theta(x - X_i) step functions.
+    x_ecdf = np.concatenate([[x_lims[0]], x_sorted, [x_lims[1]]])
+    y_ecdf = np.concatenate([[0], np.arange(1, n_samples + 1) / n_samples, [1]])
+
+    ax4.step(
+        x_ecdf,
+        y_ecdf,
+        where="post",
+        color="#1f77b4",
+        linewidth=1.8,
+        label=r"cumulative probability",
+    )
+
+    ax4.axvline (x=a, color = 'tomato', linestyle = '--', label = 'x min')
+    ax4.axvline (x=b, color = 'tomato', linestyle = '--', label = 'x max')
+    ax4.axhline (y=-0.05, color='gray', linestyle='--', linewidth=1)
+    
+    y_jitter = np.full (n_samples, -0.05)
+
+    ax4.scatter(
         samples,
         y_jitter,
         s=marker_size**2,
-        alpha=opacity,
+        # alpha=opacity,
         color="#002b80",
         edgecolors="none",
+        label=r"sample",        
     )
-    ax1.axhline(0, color="gray", linestyle="--", linewidth=1)
-    ax1.set_xlim(x_lims)
-    ax1.set_ylim(-0.25, 0.25)
-    ax1.set_yticks([])
-    ax1.set_title(f"{n_samples} Tossed Samples", fontsize=11, fontweight="bold")
-    ax1.axvline (x=a, color = 'tomato', linestyle = '--', label = 'a')
-    ax1.axvline (x=b, color = 'tomato', linestyle = '--', label = 'b')
-    plt.tight_layout()
 
     st.divider()
-    st.pyplot(fig1)
-    st.divider()
+    st.pyplot(fig4)
 
     # ==========================================
-    # DRAWING 2: Unnormalized Histogram (Raw Counts)
+    # Unnormalized Histogram (Raw Counts)
     # ==========================================
     fig2, ax2 = plt.subplots(figsize=(10, 3.5))
 
@@ -142,8 +156,9 @@ def render ():
     plt.tight_layout()
 
     # ==========================================
-    # DRAWING 3: Normalized Density Histogram (density=True)
+    # Normalized Density Histogram (density=True)
     # ==========================================
+
     fig3, ax3 = plt.subplots(figsize=(10, 3.5))
 
     # Matplotlib's density=True handles total area normalization reliably
@@ -175,49 +190,12 @@ def render ():
     # with st.container (key="prob_box_2"):
     #     st.markdown (f'**number of samples: {n_samples}**')
 
+    st.divider()
     st.header("Histogram representation")
     st.pyplot(fig2)
     st.divider()
     st.pyplot(fig3)
 
-    # ==========================================
-    # DRAWING: Empirical CDF built with Heaviside Steps \Theta(x - X_i)
-    # ==========================================
-
-    fig4, ax4 = plt.subplots(figsize=(10, 3.5))
-
-    # Sort the sample to evaluate the empirical step function
-    x_sorted = np.sort(samples)
-
-    # 1. Empirical CDF using Heaviside Step Function: \hat{F}_N(x) = (1/N) * \sum \Theta(x - X_i)
-    # Matplotlib's step plot with `where='post'` draws horizontal lines followed by jumps,
-    # which exactly matches the sum of right-continuous \Theta(x - X_i) step functions.
-    x_ecdf = np.concatenate([[x_lims[0]], x_sorted, [x_lims[1]]])
-    y_ecdf = np.concatenate([[0], np.arange(1, n_samples + 1) / n_samples, [1]])
-
-    ax4.step(
-        x_ecdf,
-        y_ecdf,
-        where="post",
-        color="#1f77b4",
-        linewidth=1.8,
-        label=r"cumulative probability",
-    )
-
-    y_jitter = np.full (n_samples, -0.05)
-
-    ax4.scatter(
-        samples,
-        y_jitter,
-        s=marker_size**2,
-        # alpha=opacity,
-        color="#002b80",
-        edgecolors="none",
-        label=r"sample",        
-    )
-
-    st.divider()
-    st.pyplot(fig4)
 
 
 if __name__ == "__main__":
