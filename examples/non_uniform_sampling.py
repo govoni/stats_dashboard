@@ -1,8 +1,5 @@
 ''' TODO
 - fare anche la cumulativa con l'istogramma, mostra che sono leggermente diverse
-- aggiungi sturges per il numero di bin (suggerimento)
-- aggiungi slider che cambia il range di visualizzazione dell'istogramma
-- in uno slider si può mettere una barretta per indicare un valore? (sturges)
 '''
 
 
@@ -11,6 +8,24 @@ import numpy as np
 import streamlit as st
 from scipy.stats import skewnorm
 
+DEFAULT_sl_n_bins = 25
+DEFAULT_sl_scale = 1.2
+
+# 2. Initialize the slider states if they don't exist yet
+if "sl_n_bins" not in st.session_state:
+    st.session_state.sl_n_bins = DEFAULT_sl_n_bins
+
+if "sl_scle" not in st.session_state:
+    st.session_state.sl_scale = DEFAULT_sl_scale
+
+# 3. Create a callback function to reset session state values
+def reset_sliders():
+    st.session_state.sl_n_bins = DEFAULT_sl_n_bins
+    st.session_state.sl_scale = DEFAULT_sl_scale
+
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+
 
 def get_marker_style(n_samples: int) -> tuple[float, float]:
     """Returns (marker_size, opacity) based on sample size."""
@@ -18,6 +33,9 @@ def get_marker_style(n_samples: int) -> tuple[float, float]:
         return 8.0, 0.9
     else:
         return 5.0, 0.7
+
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
 
 
 def render ():
@@ -123,19 +141,48 @@ def render ():
     st.pyplot(fig4)
 
     # ==========================================
+    # HISTOGRAMS
+    # ==========================================
+
+    st.divider()
+    st.header("Histogram representation")
+
+    col3, col4 = st.columns(2)
+
+    with col3 :
+
+        n_bins = st.slider(
+            "Number of Histogram Bins",
+            min_value = 1,
+            max_value = 1000,
+            # value     = 25,
+            step      = 1,
+            key       = 'sl_n_bins',
+        )
+        bins = np.linspace(a, b, n_bins + 1)
+
+        st.button("Reset Sliders to Default", on_click=reset_sliders)
+
+    with col4 :
+ 
+        scale = st.slider(
+            f"Horizontal axis size (with respect to {b-a})",
+            min_value = 0.1,
+            max_value = 50.,
+            # value     = 1.2,
+            step      = 0.1,
+            key       = 'sl_scale',
+        )
+
+    mean = 0.5 * (a+b)
+    size = b-a
+    x_lims = (mean - 0.5 * size * scale, mean + 0.5 * size * scale)
+ 
+    # ==========================================
     # Unnormalized Histogram (Raw Counts)
     # ==========================================
+
     fig2, ax2 = plt.subplots(figsize=(10, 3.5))
-
-    n_bins = st.slider(
-        "Number of Histogram Bins",
-        min_value=5,
-        max_value=100,
-        value=25,
-        step=1,
-    )
-
-    bins = np.linspace(a, b, n_bins + 1)
 
     ax2.hist(
         samples,
@@ -169,7 +216,7 @@ def render ():
         color="#ADD8E6",
         edgecolor="#1f77b4",
         alpha=0.8,
-        label="Empirical Density",
+        label="Histogram Density",
     )
 
     ax3.set_xlim(x_lims)
@@ -187,17 +234,54 @@ def render ():
     # DISPLAY (Direct Streamlit Pyplot Calls)
     # ==========================================
 
-    # with st.container (key="prob_box_2"):
-    #     st.markdown (f'**number of samples: {n_samples}**')
-
-    st.divider()
-    st.header("Histogram representation")
     st.pyplot(fig2)
     st.divider()
     st.pyplot(fig3)
+
+    # ==========================================
+    # HISTOGRAM CUMULATIVE
+    # ==========================================
+
+    fig5, ax5 = plt.subplots(figsize=(10, 3.5))
+
+    # Matplotlib's density=True handles total area normalization reliably
+    ax5.hist(
+        samples,
+        bins=bins,
+        density=True,
+        cumulative=True,
+        histtype='step',
+        color="#ADD8E6",
+        edgecolor="#1f77b4",
+        alpha=0.8,
+        label="cumulative histogram",
+    )
+
+    ax5.step(
+        x_ecdf,
+        y_ecdf,
+        where="post",
+        color="#1f77b4",
+        linewidth=1.8,
+        label=r"cumulative probability",
+    )
+
+    ax5.set_xlim(x_lims)
+    ax5.set_xlabel("Value (X)")
+    ax5.set_ylabel("Probability")
+    ax5.set_title(
+        "Cumulative",
+        fontsize=11,
+        fontweight="bold",
+    )
+    ax5.legend(loc="upper right")
+    plt.tight_layout()
+
+    st.pyplot(fig5)
+    st.divider()
 
 
 
 if __name__ == "__main__":
     st.set_page_config(page_title="Uniform Sampling Demo", layout="wide")
-    render_uniform_distribution_example()
+    render ()
