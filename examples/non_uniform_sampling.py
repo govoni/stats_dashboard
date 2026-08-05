@@ -1,8 +1,3 @@
-''' TODO
-- fare anche la cumulativa con l'istogramma, mostra che sono leggermente diverse
-'''
-
-
 import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
