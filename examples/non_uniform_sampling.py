@@ -132,7 +132,16 @@ def render ():
         label=r"sample",        
     )
 
-    st.divider()
+    ax4.set_xlim(x_lims)
+    ax4.set_xlabel("Value (X)")
+    ax4.set_ylabel(r"$F(x) = P(X \leq x)$")
+    ax4.set_title(
+        "Sample probability",
+        fontsize=11,
+        fontweight="bold",
+    )
+
+    plt.tight_layout()
     st.pyplot(fig4)
 
     # ==========================================
@@ -195,6 +204,7 @@ def render ():
         fontsize=11,
         fontweight="bold",
     )
+
     plt.tight_layout()
 
     # ==========================================
@@ -223,7 +233,6 @@ def render ():
         fontweight="bold",
     )
     ax3.legend(loc="upper right")
-    plt.tight_layout()
 
     # ==========================================
     # DISPLAY (Direct Streamlit Pyplot Calls)
@@ -231,6 +240,7 @@ def render ():
 
     st.pyplot(fig2)
     st.divider()
+    plt.tight_layout()
     st.pyplot(fig3)
 
     # ==========================================
