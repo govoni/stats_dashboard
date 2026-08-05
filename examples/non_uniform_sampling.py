@@ -1,6 +1,16 @@
+''' TODO
+- per la distribuzione non uniforme, mostra anche la cumulativa
+- fare anche la cumulativa con l'istogramma, mostra che sono leggermente diverse
+- aggiungi sturges per il numero di bin (suggerimento)
+- aggiungi slider che cambia il range di visualizzazione dell'istogramma
+- in uno slider si può mettere una barretta per indicare un valore? (sturges)
+'''
+
+
 import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
+from scipy.stats import skewnorm
 
 
 def get_marker_style(n_samples: int) -> tuple[float, float]:
@@ -12,7 +22,7 @@ def get_marker_style(n_samples: int) -> tuple[float, float]:
 
 
 def render ():
-    st.header("Uniform sampling in 1D")
+    st.header("Non-uniform sampling in 1D")
 
     # background-color: #fff9c4; /* yellow */
     st.markdown ("""
@@ -31,16 +41,9 @@ def render ():
 
     # --- Controls ---
     col1, col2 = st.columns(2)
+    a, b = -2., 5.
 
     with col1:
-        bounds = st.slider(
-            "Uniform Range [a, b]",
-            min_value=-10.0,
-            max_value=10.0,
-            value=(-2.0, 5.0),
-            step=0.5,
-        )
-        a, b = bounds
 
         if "log_n_val" not in st.session_state:
             st.session_state["log_n_val"] = 1.0
@@ -60,13 +63,6 @@ def render ():
         n_samples = int(round(10**log_n))
 
     with col2:
-        n_bins = st.slider(
-            "Number of Histogram Bins",
-            min_value=5,
-            max_value=100,
-            value=25,
-            step=1,
-        )
 
         seed = st.number_input("Random Seed (0 for off)", min_value=0, value=0)
 
@@ -74,11 +70,14 @@ def render ():
     if seed != 0:
         np.random.seed(seed)
 
-    samples = np.random.uniform(low=a, high=b, size=n_samples)
+    skew = 5.0  # Positive skew (right-skewed bell curve)
+    x = np.linspace(-2, 6, 1000)
+    pdf = skewnorm.pdf(x, skew, loc=0, scale=1.5)
+    samples = skewnorm.rvs(skew, loc=0, scale=1.5, size=n_samples)
+
     marker_size, opacity = get_marker_style(n_samples)
 
     # Bin edges and x-axis limits
-    bins = np.linspace(a, b, n_bins + 1)
     x_lims = (a - 1.5, b + 1.5)
 
     # ==========================================
@@ -105,12 +104,24 @@ def render ():
     ax1.axvline (x=b, color = 'tomato', linestyle = '--', label = 'b')
     plt.tight_layout()
 
-
+    st.divider()
+    st.pyplot(fig1)
+    st.divider()
 
     # ==========================================
     # DRAWING 2: Unnormalized Histogram (Raw Counts)
     # ==========================================
     fig2, ax2 = plt.subplots(figsize=(10, 3.5))
+
+    n_bins = st.slider(
+        "Number of Histogram Bins",
+        min_value=5,
+        max_value=100,
+        value=25,
+        step=1,
+    )
+
+    bins = np.linspace(a, b, n_bins + 1)
 
     ax2.hist(
         samples,
@@ -146,21 +157,6 @@ def render ():
         label="Empirical Density",
     )
 
-    # Theoretical Uniform PDF step plot
-    if b > a:
-        pdf_height = 1.0 / (b - a)
-        x_pdf = [x_lims[0], a, a, b, b, x_lims[1]]
-        y_pdf = [0, 0, pdf_height, pdf_height, 0, 0]
-        ax3.plot(
-            x_pdf,
-            y_pdf,
-            color="#D32F2F",
-            linestyle="--",
-            linewidth=2,
-            label="Theoretical PDF $f(x)$",
-        )
-        # ax3.set_ylim(0, pdf_height * 1.25)
-
     ax3.set_xlim(x_lims)
     ax3.set_xlabel("Value (X)")
     ax3.set_ylabel("Density")
@@ -179,25 +175,49 @@ def render ():
     # with st.container (key="prob_box_2"):
     #     st.markdown (f'**number of samples: {n_samples}**')
 
-    st.divider()
-    st.pyplot(fig1)
-    st.divider()
     st.header("Histogram representation")
     st.pyplot(fig2)
     st.divider()
     st.pyplot(fig3)
 
-    with st.container (key="prob_box"):
-        # st.markdown ("**Probability definition:**")
-        st.latex(
-            r"""
-            X \sim \mathcal{U}(a, b) \implies f(x) = 
-            \begin{cases} 
-              \frac{1}{b - a} & \text{for } a \le x \le b \\[8pt]
-              0 & \text{otherwise} 
-            \end{cases}
-        """
-        )
+    # ==========================================
+    # DRAWING: Empirical CDF built with Heaviside Steps \Theta(x - X_i)
+    # ==========================================
+
+    fig4, ax4 = plt.subplots(figsize=(10, 3.5))
+
+    # Sort the sample to evaluate the empirical step function
+    x_sorted = np.sort(samples)
+
+    # 1. Empirical CDF using Heaviside Step Function: \hat{F}_N(x) = (1/N) * \sum \Theta(x - X_i)
+    # Matplotlib's step plot with `where='post'` draws horizontal lines followed by jumps,
+    # which exactly matches the sum of right-continuous \Theta(x - X_i) step functions.
+    x_ecdf = np.concatenate([[x_lims[0]], x_sorted, [x_lims[1]]])
+    y_ecdf = np.concatenate([[0], np.arange(1, n_samples + 1) / n_samples, [1]])
+
+    ax4.step(
+        x_ecdf,
+        y_ecdf,
+        where="post",
+        color="#1f77b4",
+        linewidth=1.8,
+        label=r"cumulative probability",
+    )
+
+    y_jitter = np.full (n_samples, -0.05)
+
+    ax4.scatter(
+        samples,
+        y_jitter,
+        s=marker_size**2,
+        # alpha=opacity,
+        color="#002b80",
+        edgecolors="none",
+        label=r"sample",        
+    )
+
+    st.divider()
+    st.pyplot(fig4)
 
 
 if __name__ == "__main__":

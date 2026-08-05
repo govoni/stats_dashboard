@@ -49,7 +49,7 @@ def render ():
 
         current_n = int(round(10 ** st.session_state["log_n_val"]))
 
-        st.write(f"**Number of Tosses (N):** `{current_n:,}`")
+        st.info (f"**Number of Tosses (N):** `{current_n:,}`")
         log_n = st.slider(
             "Number of Tosses (N)",
             min_value=1.0,
@@ -80,6 +80,7 @@ def render ():
     # ==========================================
     # DRAWING: Empirical CDF built with Heaviside Steps \Theta(x - X_i)
     # ==========================================
+
     fig4, ax4 = plt.subplots(figsize=(10, 3.5))
 
     # Sort the sample to evaluate the empirical step function

@@ -101,7 +101,7 @@ def render ():
         y_samples,
         s=marker_size**2,
         alpha=opacity,
-        color="#1f77b4",
+        color="#002b80",
         edgecolors="none",
     )
 

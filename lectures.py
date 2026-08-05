@@ -17,7 +17,7 @@ use `placeholder_for(title)` as a drop-in stand-in.
 
 import functools
 
-from examples import dice_frequentist, uniform_sampling, uniform_sampling_2D, uniform_cumulative
+from examples import dice_frequentist, uniform_sampling, uniform_sampling_2D, uniform_cumulative, non_uniform_sampling
 
 
 def placeholder_for(title):
@@ -37,6 +37,8 @@ LECTURES = [
              "render": uniform_sampling_2D.render},
             {"id": "uniform_cumulative", "title": "Cumulative uniform sampling in 1D",
              "render": uniform_cumulative.render},
+            {"id": "non_uniform_sampling", "title": "Non-uniform sampling in 1D",
+             "render": non_uniform_sampling.render},
         ],
     },
     {
