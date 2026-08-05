@@ -18,7 +18,7 @@ use `placeholder_for(title)` as a drop-in stand-in.
 import functools
 
 from examples import dice_frequentist, uniform_sampling, uniform_sampling_2D, uniform_cumulative, non_uniform_sampling
-from examples import mean_and_sigma
+from examples import mean_and_sigma, skewness_kurtosys
 
 def placeholder_for(title):
     """Bind the generic placeholder module to a specific example title."""
@@ -46,56 +46,8 @@ LECTURES = [
         "examples": [
             {"id": "mean_and_sigma", "title": "Mean and Sigma in 1D",
              "render": mean_and_sigma.render},
-        ],
-    },
-    {
-        "title": "lecture 3.",
-        "examples": [
-        ],
-    },
-    {
-        "title": "lecture 4.",
-        "examples": [
-        ],
-    },
-    {
-        "title": "Lecture 5.",
-        "examples": [
-        ],
-    },
-    {
-        "title": "Lecture 6.",
-        "examples": [
-        ],
-    },
-    {
-        "title": "Lecture 7.",
-        "examples": [
-        ],
-    },
-    {
-        "title": "Lecture 8.",
-        "examples": [
-        ],
-    },
-    {
-        "title": "Lecture 9.",
-        "examples": [
-        ],
-    },
-    {
-        "title": "Lecture 10.",
-        "examples": [
-        ],
-    },
-    {
-        "title": "Lecture 11.",
-        "examples": [
-        ],
-    },
-    {
-        "title": "Lecture 12.",
-        "examples": [
+            {"id": "skewness_kurtosys", "title": "Skewness and Kurtosis in 1D",
+             "render": skewness_kurtosys.render},
         ],
     },
 ]
