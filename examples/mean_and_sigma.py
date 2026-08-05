@@ -23,7 +23,7 @@ def get_marker_style(n_samples: int) -> tuple[float, float]:
 
 
 def render ():
-    st.header("Non-uniform sampling in 1D")
+    st.header("Mean and Sigma of a 1D sample")
 
     # background-color: #fff9c4; /* yellow */
     st.markdown ("""
@@ -41,7 +41,7 @@ def render ():
     """, unsafe_allow_html=True)
 
     # --- Controls ---
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns (3)
     a, b = -2., 5.
 
     with col1:
@@ -63,31 +63,54 @@ def render ():
     with col2:
 
         seed = st.number_input("Random Seed (0 for off)", min_value=0, value=0)
+        show_expected = st.checkbox ("Show Expected Values", value=False)
+
+
+    with col3:
+
+        s_scale = st.slider(
+            "Dispersion of the samples",
+            min_value = 1.,
+            max_value = 50.,
+            value     = 1.5,
+            step      = 0.5,
+        )
+
 
     # --- Data Generation ---
     if seed != 0:
         np.random.seed(seed)
 
     skew = 5.0  # Positive skew (right-skewed bell curve)
-    x = np.linspace(-2, 6, 1000)
-    pdf = skewnorm.pdf(x, skew, loc=0, scale=1.5)
-    samples = skewnorm.rvs(skew, loc=0, scale=1.5, size=n_samples)
-    true_mean = skewnorm.mean(skew, loc=0, scale=1.5)
-    true_sigma = skewnorm.std(skew, loc=0, scale=1.5)    
-
+    true_mean = skewnorm.mean(skew, loc=0, scale=s_scale)
+    true_sigma = skewnorm.std(skew, loc=0, scale=s_scale)    
+    x_lims = (true_mean - 3 * true_sigma, true_mean + 4 * true_sigma)
+    x = np.linspace(*x_lims, 1000)
+    pdf = skewnorm.pdf(x, skew, loc=0, scale=s_scale)
+    samples = skewnorm.rvs(skew, loc=0, scale=s_scale, size=n_samples)
 
     marker_size, opacity = get_marker_style(n_samples)
 
     # Bin edges and x-axis limits
-    x_lims = (a - 1.5, b + 1.5)
-    n_bins = sturges (n_samples)
-    bins = np.linspace(a, b, n_bins + 1)
+    n_bins = 2 * sturges (n_samples)
+    bins = np.linspace(*x_lims, n_bins + 1)
 
     # ==========================================
     # SAMPLE, HISTOGRAM, MEAN AND SIGMA
     # ==========================================
 
-    fig4, ax4 = plt.subplots(figsize=(10, 3.5))
+    # fig4, ax4 = plt.subplots(figsize=(10, 3.5))
+
+    fig, (ax_top, ax_bot) = plt.subplots(
+        2, 1, 
+        sharex=True, 
+        figsize=(10, 3.5),
+        gridspec_kw={
+                'hspace': 0,            # Remove space between plots
+                'height_ratios': [6, 1] # 6:1 relative height
+            }
+        )
+
 
     # Sort the sample to evaluate the empirical step function
     x_sorted = np.sort(samples)
@@ -98,7 +121,7 @@ def render ():
     x_ecdf = np.concatenate([[x_lims[0]], x_sorted, [x_lims[1]]])
     y_ecdf = np.concatenate([[0], np.arange(1, n_samples + 1) / n_samples, [1]])
 
-    ax4.hist(
+    ax_top.hist(
         samples,
         bins=bins,
         density=True,
@@ -108,10 +131,10 @@ def render ():
         label="Histogram Density",
     )
 
-    ax4.set_xlim(x_lims)
-    ax4.set_xlabel("Value (X)")
-    ax4.set_ylabel("Density")
-    ax4.set_title(
+    ax_top.set_xlim(x_lims)
+    ax_top.set_xlabel("Value (X)")
+    ax_top.set_ylabel("Density")
+    ax_top.set_title(
         "Density Histogram (Normalized, density=True)",
         fontsize=11,
         fontweight="bold",
@@ -120,19 +143,25 @@ def render ():
     mean = np.mean (samples)
     sigma = np.std (samples)
 
-    ax4.axvline (x=mean, color = 'red', linestyle = '-', label = '$\mu$')
-    ax4.axvline (x=mean-sigma, color = 'sienna', linestyle = '-', label = '$\mu-\sigma$')
-    ax4.axvline (x=mean+sigma, color = 'sienna', linestyle = '-', label = '$\mu+\sigma$')
+    ax_top.axvline (x=mean, color = 'red', linestyle = '-', label = '$\mu$')
+    ax_top.axvline (x=mean-sigma, color = 'sienna', linestyle = '-', label = '$\mu-\sigma$')
+    ax_top.axvline (x=mean+sigma, color = 'sienna', linestyle = '-', label = '$\mu+\sigma$')
 
-    ax4.axvline (x=true_mean, color = 'red', alpha = 0.5, linestyle = '--', label = '$\mu_t$')
-    ax4.axvline (x=true_mean-true_sigma, color = 'sienna', alpha = 0.5, linestyle = '--', label = '$\mu_t-\sigma_t$')
-    ax4.axvline (x=true_mean+true_sigma, color = 'sienna', alpha = 0.5, linestyle = '--', label = '$\mu_t+\sigma_t$')
+    if show_expected :
+        ax_top.axvline (x=true_mean, color = 'red', alpha = 0.5, linestyle = '--', label = '$\mu_t$')
+        ax_top.axvline (x=true_mean-true_sigma, color = 'sienna', alpha = 0.5, linestyle = '--', label = '$\mu_t-\sigma_t$')
+        ax_top.axvline (x=true_mean+true_sigma, color = 'sienna', alpha = 0.5, linestyle = '--', label = '$\mu_t+\sigma_t$')
 
-    ax4.axhline (y=-0.05, color='gray', linestyle='--', linewidth=1)
+    ax_top.set_title(
+        "Sample probability density",
+        fontsize=11,
+        fontweight="bold",
+    )
+    # ax_top.legend(loc="upper right")
     
-    y_jitter = np.full (n_samples, -0.05)
+    y_jitter = np.full (n_samples, 0.)
 
-    ax4.scatter(
+    ax_bot.scatter(
         samples,
         y_jitter,
         s=marker_size**2,
@@ -141,19 +170,20 @@ def render ():
         edgecolors="none",
         label=r"sample",        
     )
+    ax_bot.axhline (y=0., color='gray', linestyle='--', linewidth=1)
+    ax_bot.get_yaxis().set_visible(False)
+    ax_bot.set_xlim(x_lims)
+    ax_bot.set_xlabel("Value (X)")
 
-    ax4.set_xlim(x_lims)
-    ax4.set_xlabel("Value (X)")
-    ax4.set_ylabel(r"$F(x) = P(X \leq x)$")
-    ax4.set_title(
-        "Sample probability",
-        fontsize=11,
-        fontweight="bold",
-    )
-    ax4.legend(loc="upper right")
+    # 3. Collect handles and labels from BOTH axes
+    handles1, labels1 = ax_top.get_legend_handles_labels()
+    handles2, labels2 = ax_bot.get_legend_handles_labels()
+
+    # 4. Combine them and display single legend on top axis
+    ax_top.legend(handles=handles1 + handles2, labels=labels1 + labels2, loc='upper right')
 
     plt.tight_layout()
-    st.pyplot(fig4)
+    st.pyplot(fig)
 
 
 if __name__ == "__main__":
