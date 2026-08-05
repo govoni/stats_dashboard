@@ -89,6 +89,9 @@ def render():
 
     skew = stats.skew(y, bias=False)
     exkurt = stats.kurtosis(y, fisher=True, bias=False)  # 0 for a Gaussian
+    mean = np.mean (y)
+    sigma = np.std (y)
+    median = np.median (y)
 
     m1, m2, m3 = st.columns(3)
     m1.metric("Sample skewness", f"{skew:.3f}", "0 = symmetric")
@@ -103,20 +106,27 @@ def render():
     fig, axes = plt.subplots(1, 2, figsize=(10, 3.5))
 
     axes[0].hist(y, bins=80, range=(lo, hi), density=True, color="steelblue",
-                 alpha=0.7, label="morphed distribution")
-    axes[0].plot(x_ref, stats.norm.pdf(x_ref), "r--", lw=1.5, label="standard normal")
+                 alpha=0.7, label="sample histogram")
+    axes[0].plot(x_ref, stats.norm.pdf(x_ref), "r-", lw=1.5, label="Gaussian")
     axes[0].set_title("linear scale")
-    axes[0].set_xlabel("y (standardized)")
+    axes[0].set_xlabel("Value (x)")
     axes[0].set_ylabel("density")
-    axes[0].legend()
 
-    axes[1].hist(y, bins=80, range=(lo, hi), density=True, color="steelblue", alpha=0.7)
-    axes[1].plot(x_ref, stats.norm.pdf(x_ref), "r--", lw=1.5)
+    axes[0].axvline (x=mean, color = 'magenta', linestyle = '--', label = 'mean')
+    axes[0].axvline (x=median, color = 'blue', linestyle = '--', label = 'median')
+
+    axes[1].hist(y, bins=80, range=(lo, hi), density=True, color="steelblue", alpha=0.7, label="sample histogram")
+    axes[1].plot(x_ref, stats.norm.pdf(x_ref), "r-", lw=1.5, label="Gaussian")
     axes[1].set_yscale("log")
     axes[1].set_ylim(1e-4, 1)
     axes[1].set_title("log scale (tails)")
-    axes[1].set_xlabel("y (standardized)")
+    axes[1].set_xlabel("Value (x)")
     axes[1].set_ylabel("density (log)")
+
+    axes[1].axvline (x=mean, color = 'magenta', linestyle = '--', label = 'mean')
+    axes[1].axvline (x=median, color = 'blue', linestyle = '--', label = 'median')
+
+    axes[1].legend()
 
     plt.tight_layout()
     st.pyplot(fig)
