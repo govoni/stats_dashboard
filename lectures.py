@@ -19,7 +19,7 @@ import functools
 
 from examples import dice_frequentist, uniform_sampling, uniform_sampling_2D, uniform_cumulative, non_uniform_sampling
 from examples import mean_and_sigma, skewness_kurtosys
-from examples import clt
+from examples import clt, mean_uncertainty
 
 def placeholder_for(title):
     """Bind the generic placeholder module to a specific example title."""
@@ -51,6 +51,8 @@ LECTURES = [
              "render": skewness_kurtosys.render},
             {"id": "clt", "title": "Central Limit Theorem",
              "render": clt.render},
+            {"id": "mean_uncertainty", "title": "Single Measure and Mean Uncertainty",
+             "render": mean_uncertainty.render},
         ],
     },
 ]

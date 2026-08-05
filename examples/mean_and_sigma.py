@@ -111,7 +111,6 @@ def render ():
             }
         )
 
-
     # Sort the sample to evaluate the empirical step function
     x_sorted = np.sort(samples)
 
@@ -159,8 +158,9 @@ def render ():
     )
     # ax_top.legend(loc="upper right")
     
-    y_jitter = np.full (n_samples, 0.)
+    ax_bot.axhline (y=0., color='gray', linestyle='--', linewidth=1)
 
+    y_jitter = np.full (n_samples, 0.)
     ax_bot.scatter(
         samples,
         y_jitter,
@@ -170,7 +170,6 @@ def render ():
         edgecolors="none",
         label=r"sample",        
     )
-    ax_bot.axhline (y=0., color='gray', linestyle='--', linewidth=1)
     ax_bot.get_yaxis().set_visible(False)
     ax_bot.set_xlim(x_lims)
     ax_bot.set_xlabel("Value (X)")

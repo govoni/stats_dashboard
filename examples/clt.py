@@ -31,7 +31,7 @@ def get_dist_properties(dist_type):
         def sampler(size):
             u = np.random.uniform(0, 1, size)
             return 0.5 + np.cbrt((u - 0.5) / 4.0)
-            
+
     return sampler, mean, var
 
 @st.cache_data
