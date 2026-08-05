@@ -97,12 +97,6 @@ def render():
     if c5.button("Clear Points"):
         st.session_state.single_points = []
 
-    # N_group = st.sidebar.slider("Measurements per Mean ($N$):", min_value=1, max_value=100, value=10, step=1)
-    # total_trials = st.sidebar.slider("Total Batches of Means:", min_value=500, max_value=20000, value=5000, step=500)
-
-    # st.sidebar.markdown("---")
-    # st.sidebar.header("Step-by-Step Single Samples")
-
     # Initialize Session State for interactive point accumulation
     if 'single_points' not in st.session_state:
         st.session_state.single_points = []
@@ -110,44 +104,42 @@ def render():
         st.session_state.single_points = []
         st.session_state.current_dist = dist_choice
 
-    # col_btn1, col_btn2 = st.sidebar.columns(2)
-    # if col_btn1.button("➕ Add 1 Point"):
-    #     sampler, _, _, _, _ = get_dist_info(dist_choice)
-    #     st.session_state.single_points.append(sampler(1)[0])
-
-    # if col_btn2.button("🧹 Clear Points"):
-    #     st.session_state.single_points = []
-
     # ------------------------------------------------------------------
     # 3. Perform Calculations
     # ------------------------------------------------------------------
-    sampler, mu_true, sigma_single_true, pdf_func, x_limits = get_dist_info(dist_choice)
-
-    # # Generate large batch simulation for smoothed distributions
-    # draws = sampler((total_trials, N_group))
-    # sample_means = np.mean(draws, axis=1)
-
-    # # Theoretical sigma of the mean
-    # sigma_mean_true = sigma_single_true / np.sqrt(N_group)
-
-    # # Empirical standard deviations
-    # emp_sigma_single = np.std(draws[:, 0], ddof=1)
-    # emp_sigma_mean = np.std(sample_means, ddof=1)
-
-    # # Display Metric Cards
-    # col1, col2, col3 = st.columns(3)
-    # col1.metric("Single Measurement $\\sigma$", f"{emp_sigma_single:.4f}", help=f"Theoretical: {sigma_single_true:.4f}")
-    # # col2.metric(f"Mean of {N_group} Measurements $\sigma_\{\mu\}$", f"{emp_sigma_mean:.4f}", help=f"Theoretical: {sigma_mean_true:.4f}")
-    # col2.metric(f"Mean of {N_group} Measurements ", f"{emp_sigma_mean:.4f}", help=f"Theoretical: {sigma_mean_true:.4f}")
-    # col3.metric("Reduction Factor $(\\sqrt{N})$", f"{(emp_sigma_single / emp_sigma_mean):.2f}x", help=f"Theoretical Ratio: {np.sqrt(N_group):.2f}x")
-
-    # ------------------------------------------------------------------
-    # 4. Matplotlib Plots
-    # ------------------------------------------------------------------
+    sampler, mu_true, sigma_single_true, pdf_func, x_limits = get_dist_info (dist_choice)
 
     N_means = 1000 # FIXME da trasformare in un parametro configurabile
-    left_color = 'darkblue'
-    right_color = 'rebeccapurple'
+    sample_color      = 'red'
+    dark_sample_color = 'darkred'
+    mean_color        = 'darkblue'
+
+    # for the trend plots
+    n_range = np.arange(0, 6)
+    n_points_list = []
+    sample_mean_list, sample_sigma_list = [], []
+    mean_mean_list, mean_sigma_list= [], []
+
+    # Compute metrics over range for convergence curve
+    # for each given number of samples, 
+    # the metrics for the single measurement are calculated
+    # on a sample of single measurements,
+    # while the metrics for the mean are calculated
+    # on a sample of means
+    N_samples = 1
+    for n in n_range:
+        # generate a sample of means and calculate its stats
+        means = [np.mean (sampler (N_samples)) for i in range (N_means)]
+        mean_mean_list.append (np.mean (means))
+        mean_sigma_list.append (np.std (means))
+
+        n_points_list.append (N_samples)
+
+        N_samples *= 3
+
+    # ------------------------------------------------------------------
+    # DISTRIBUTIONS AT FIXED NUMBER OF SAMPLES
+    # ------------------------------------------------------------------
 
     fig, (ax_pdf, ax_sam, ax_ave) = plt.subplots(
         3, 1, 
@@ -163,7 +155,7 @@ def render():
     x_grid = np.linspace(x_limits[0], x_limits[1], 500)
 
     # 1. Base PDF (Single Measurements)
-    ax_pdf.plot (x_grid, pdf_func(x_grid), color=left_color, lw=1.5, label='Original PDF (Single Measurement)')
+    ax_pdf.plot (x_grid, pdf_func(x_grid), color=sample_color, lw=1.5, label='Original PDF (Single Measurement)')
 
     ax_sam.axhline (y=0., color='gray', linestyle='--', linewidth=1)
     ax_sam.set_xlim (x_limits)
@@ -179,8 +171,8 @@ def render():
     if len (st.session_state.single_points) > 0:
         pts = np.array (st.session_state.single_points)
         y_jitter = np.zeros_like (pts)
-        ax_sam.scatter (pts, y_jitter, color='red', alpha=0.5, zorder=5, s=40, label='samples')
-        ax_sam.scatter (pts[-1], y_jitter[-1], color='darkred', zorder=5, s=40)
+        ax_sam.scatter (pts, y_jitter, color=sample_color, alpha=0.5, zorder=5, s=40, label='samples')
+        ax_sam.scatter (pts[-1], y_jitter[-1], color=dark_sample_color, zorder=5, s=40)
 
         N_events = len (st.session_state.single_points)
         n_bins = 2 * sturges (N_events)
@@ -204,15 +196,15 @@ def render():
         ax_ave.scatter (
           means, 
           y_jitter, 
-          color  ='rebeccapurple', 
+          color  = mean_color, 
           marker = 'P',
           alpha  = 0.5,
           zorder = 5, 
           s      = 40, 
           label  = 'means'
         )
-        ax_pdf2.set_ylabel ('Probability Density (means)', color = right_color)
-        ax_pdf2.tick_params (axis='y', labelcolor=right_color)
+        ax_pdf2.set_ylabel ('Probability Density (means)', color = mean_color)
+        ax_pdf2.tick_params (axis='y', labelcolor=mean_color)
 
         bins = np.linspace (*x_limits, 5 * n_bins + 1)
 
@@ -223,7 +215,7 @@ def render():
             histtype  = 'step',
             # color     = "#ADD8E6",
             lw        = 2.5,
-            edgecolor = right_color,
+            edgecolor = mean_color,
             alpha     = 0.8,
             label     = "Mean Expected Histogram",
         )
@@ -231,12 +223,10 @@ def render():
     # ax_pdf.set_title(f"Spread of Single Measurements vs. Mean of $N={N_group}$ Measurements ({dist_choice})", fontweight='bold')
     ax_sam.set_xlabel ("Value (X)")
     ax_pdf.set_xlim (x_limits)
-    ax_pdf.tick_params (axis='y', labelcolor = left_color)
-    ax_pdf.set_ylabel ("Probability Density (samples)", color = left_color)
+    ax_pdf.tick_params (axis='y', labelcolor = sample_color)
+    ax_pdf.set_ylabel ("Probability Density (samples)", color = sample_color)
     ax_pdf.legend (loc='upper right', fontsize='small')
     # ax_pdf.grid(True, linestyle=':', alpha=0.6)
-
-    plt.tight_layout()
 
     # 3. Collect handles and labels from BOTH axes
     handles1, labels1 = ax_pdf.get_legend_handles_labels()
@@ -257,5 +247,32 @@ def render():
         fontweight="bold",
     )
 
+    plt.tight_layout()
+
+    # ------------------------------------------------------------------
+    # TRENDS VS NUMBER OF SAMPLES
+    # ------------------------------------------------------------------
+
+    fig2, ax_sig = plt.subplots (figsize=(10, 3.5))
+
+    ax_sig.axhline (sigma_single_true, color=sample_color, linewidth=0.8, label = 'single measurement')
+    ax_sig.plot (n_points_list, mean_sigma_list, color = mean_color, linewidth=2, label = 'mean')
+    ax_sig.set_ylabel ("Sigma")
+    ax_sig.legend ()
+
+    ax_sig.set_xlabel ("sample size ($N$)")
+
+    plt.tight_layout()
+
+    # ------------------------------------------------------------------
+    # PLOTTING
+    # ------------------------------------------------------------------
+
     # Render Plot inside Streamlit
     st.pyplot(fig)
+    st.divider()
+    st.header("Sigma Trend vs. $N$")
+
+    st.pyplot(fig2)
+
+

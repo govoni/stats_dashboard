@@ -127,7 +127,7 @@ def render():
         Z_n = generate_clt_samples(dist_choice, n, num_samples=100000)
         skewness_list.append(stats.skew(Z_n))
         kurtosis_list.append(stats.kurtosis(Z_n))
-        std_list.append(np.std(Z_n, ddof=1))
+        # std_list.append(np.std(Z_n, ddof=1))
 
     plt.tight_layout()
 
@@ -163,9 +163,8 @@ def render():
     plt.tight_layout()
 
     # ------------------------------------------------------------------
-    # DRAWING
+    # PLOTTING
     # ------------------------------------------------------------------
-
 
     st.pyplot(fig)
     st.divider()
