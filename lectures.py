@@ -18,8 +18,8 @@ use `placeholder_for(title)` as a drop-in stand-in.
 import functools
 
 from examples import dice_frequentist, uniform_sampling, uniform_sampling_2D, uniform_cumulative, non_uniform_sampling
-from examples import mean_and_sigma, skewness_kurtosys
-from examples import clt, mean_uncertainty
+from examples import mean_and_sigma, skewness_kurtosys, clt, mean_uncertainty
+from examples import histogram_sampler
 
 def placeholder_for(title):
     """Bind the generic placeholder module to a specific example title."""
@@ -43,7 +43,7 @@ LECTURES = [
         ],
     },
     {
-        "title": "Probability: distributions",
+        "title": "Probability: continuous distributions",
         "examples": [
             {"id": "mean_and_sigma", "title": "Mean and Sigma in 1D",
              "render": mean_and_sigma.render},
@@ -53,6 +53,13 @@ LECTURES = [
              "render": clt.render},
             {"id": "mean_uncertainty", "title": "Single Measure and Mean Uncertainty",
              "render": mean_uncertainty.render},
+        ],
+    },
+    {
+        "title": "Probability: discrete distributions",
+        "examples": [
+            {"id": "histogram_sampler", "title": "Histogram bin distribution",
+             "render": histogram_sampler.render},
         ],
     },
 ]
