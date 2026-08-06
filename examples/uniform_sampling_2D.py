@@ -16,7 +16,7 @@ def get_marker_style(n_samples: int) -> tuple[float, float]:
 
 
 def render ():
-    st.header("2D Uniform Sampling")
+    st.title("2D Uniform Sampling")
 
     # Domain fixed at [-2, 2] x [-2, 2]
     x_min, x_max = -2.0, 2.0

@@ -18,7 +18,7 @@ use `placeholder_for(title)` as a drop-in stand-in.
 import functools
 
 from examples import dice_frequentist, uniform_sampling, uniform_sampling_2D, uniform_cumulative, non_uniform_sampling
-from examples import mean_and_sigma, skewness_kurtosys, clt, mean_uncertainty
+from examples import mean_and_sigma, skewness_kurtosys, clt, mean_uncertainty, mean_uncertainty_2
 from examples import histogram_sampler
 
 def placeholder_for(title):
@@ -53,6 +53,8 @@ LECTURES = [
              "render": clt.render},
             {"id": "mean_uncertainty", "title": "Single Measure and Mean Uncertainty",
              "render": mean_uncertainty.render},
+            {"id": "mean_uncertainty_2", "title": "Single Measure and Mean Uncertainty V2",
+             "render": mean_uncertainty_2.render},
         ],
     },
     {

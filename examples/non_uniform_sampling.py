@@ -34,7 +34,7 @@ def get_marker_style(n_samples: int) -> tuple[float, float]:
 
 
 def render ():
-    st.header("Non-uniform sampling in 1D")
+    st.title("Non-uniform sampling in 1D")
 
     # background-color: #fff9c4; /* yellow */
     st.markdown ("""

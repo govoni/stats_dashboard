@@ -61,7 +61,7 @@ def get_dist_info(dist_name):
 
 
 def render():
-    st.header("Single Measurement vs. Mean of $N$ Measurements")
+    st.title("Single Measurement vs. Mean of $N$ Measurements")
     # st.markdown(
     #     "Watch individual measurements scatter across the base distribution PDF while their "
     #     "**sample mean** $(\\bar{X})$ concentrates into a narrower Gaussian distribution with "

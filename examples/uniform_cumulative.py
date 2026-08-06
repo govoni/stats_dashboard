@@ -14,7 +14,7 @@ def get_marker_style(n_samples: int) -> tuple[float, float]:
 
 
 def render ():
-    st.header("Cumulative 1D Uniform Sampling")
+    st.title("Cumulative 1D Uniform Sampling")
 
     # background-color: #fff9c4; /* yellow */
     st.markdown ("""

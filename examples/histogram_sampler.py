@@ -126,7 +126,7 @@ def render():
     """Render the sampler widget (controls + plots) at the call site."""
 
     with st.container():
-        st.header ("Histogram bin sampling")
+        st.title ("Histogram bin sampling")
 
         col_1, col_2, col_3 = st.columns(3)
         with col_1 :

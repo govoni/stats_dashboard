@@ -17,7 +17,7 @@ _N_OPTIONS = [1, 2, 5, 10, 30, 100, 300, 1_000, 3_000, 10_000, 30_000, 100_000]
 
 
 def render():
-    st.header("Rolling a die")
+    st.title("Rolling a die")
 
     # background-color: #fff9c4; /* yellow */
     st.markdown ("""

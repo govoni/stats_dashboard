@@ -23,7 +23,7 @@ def get_marker_style(n_samples: int) -> tuple[float, float]:
 
 
 def render ():
-    st.header("Mean and Sigma of a 1D sample")
+    st.title("Mean and Sigma of a 1D sample")
 
     # background-color: #fff9c4; /* yellow */
     st.markdown ("""

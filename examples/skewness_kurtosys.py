@@ -40,7 +40,7 @@ def reset_sliders():
 
 
 def render():
-    st.header("Skewness and kurtosis: morphing a Gaussian")
+    st.title("Skewness and kurtosis: morphing a Gaussian")
 
     # ---- highlighted formula box (yellow, centered, larger font) ----
     st.markdown(
