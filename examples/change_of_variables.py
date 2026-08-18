@@ -226,8 +226,6 @@ def render():
 
         y_at_x0 = float(u_func(np.array([x0]), **trans_values)[0])
         y_at_x1 = float(u_func(np.array([x1]), **trans_values)[0])
-        # y_at_x0 = float(trans_spec["u"](np.array([x0]), **trans_values)[0])
-        # y_at_x1 = float(trans_spec["u"](np.array([x1]), **trans_values)[0])
         y_lo, y_hi = sorted([y_at_x0, y_at_x1])
         p_y = _trapz(fy[mask], y_grid[mask]) if mask.sum() > 1 else 0.0
         p_y = abs(p_y)  # trapz sign follows the direction y_grid is traversed
@@ -237,7 +235,6 @@ def render():
     with col2:
 
         fig = plt.figure(figsize=(7.5, 7.5))
-        # fig = plt.figure(figsize=(10, 4))
         gs = fig.add_gridspec(
             2, 2, width_ratios=[4, 1.3], height_ratios=[4, 1.3],
             wspace=0.05, hspace=0.05,
@@ -254,17 +251,8 @@ def render():
         ax_main.plot(x_grid, y_grid, color=curve_color, lw=2)
         ax_main.axvspan(x0, x1, color=band_color, alpha=0.6, zorder=0)
         ax_main.axhspan(y_lo, y_hi, color=band_color, alpha=0.6, zorder=0)
-        # ax_main.fill_between(
-        #     x_grid, y_grid, y_lo,
-        #     where=mask, color=fill_color, alpha=0.45, zorder=1,
-        # )
-        # dashed guide lines connecting the two intervals through the curve
-        # for xv, yv in [(x0, y_at_x0), (x1, y_at_x1)]:
-        #     ax_main.plot([xv, xv], [ax_main.get_ylim()[1] if False else y_lo, yv],
-        #                  color="0.4", lw=0.8, ls="--")
-        #     ax_main.plot([lo_q, xv], [yv, yv], color="0.4", lw=0.8, ls="--")
 
-        ax_main.margins(x=0, y=0)  # Removes x-axis padding entirely
+        ax_main.margins(x=0, y=0)  # Removes padding entirely
 
         ax_main.plot([x0, x0],[ax_main.get_ylim()[0], y_at_x0],
                      color="0.4", lw=0.8, ls="--")
@@ -282,7 +270,6 @@ def render():
         # bottom panel: f_X(x), density increasing downward away from ax_main
         ax_x.plot(x_grid, fx, color=curve_color, lw=1.6)
         ax_x.fill_between(x_grid, fx, 0, where=mask, color=fill_color, alpha=0.6)
-        # ax_x.invert_yaxis()
         ax_x.set_xlabel("x")
         ax_x.set_ylabel(r"$f_X(x)$", fontsize=9)
         ax_x.yaxis.set_major_locator(mticker.MaxNLocator(nbins=3))
@@ -295,8 +282,6 @@ def render():
         ax_y.set_xlabel(r"$f_Y(y)$", fontsize=9)
         ax_y.tick_params(labelleft=False)
         ax_y.xaxis.set_major_locator(mticker.MaxNLocator(nbins=3))
-
-        # fig.suptitle("Probability is conserved: shaded areas are equal", fontsize=11)
 
         st.pyplot(fig, clear_figure=True)
 
