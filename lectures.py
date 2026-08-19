@@ -22,6 +22,7 @@ from examples import mean_and_sigma, skewness_kurtosys, clt, mean_uncertainty, m
 from examples import histogram_sampler
 from examples import change_of_variables
 from examples import bivariate_pdf
+from examples import resonance_over_fluctuations
 
 def placeholder_for(title):
     """Bind the generic placeholder module to a specific example title."""
@@ -68,6 +69,8 @@ LECTURES = [
         "examples": [
             {"id": "histogram_sampler", "title": "Histogram bin distribution",
              "render": histogram_sampler.render},
+            {"id": "resonance_over_fluctuations", "title": "Resonance hunting",
+             "render": resonance_over_fluctuations.render},
         ],
     },
 ]
