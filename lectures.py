@@ -21,6 +21,7 @@ from examples import dice_frequentist, uniform_sampling, uniform_sampling_2D, un
 from examples import mean_and_sigma, skewness_kurtosys, clt, mean_uncertainty, mean_uncertainty_2
 from examples import histogram_sampler
 from examples import change_of_variables
+from examples import bivariate_pdf
 
 def placeholder_for(title):
     """Bind the generic placeholder module to a specific example title."""
@@ -58,6 +59,8 @@ LECTURES = [
              "render": mean_uncertainty_2.render},
             {"id": "change_of_variables", "title": "1D change of variables",
              "render": change_of_variables.render},
+            {"id": "bivariate_pdf", "title": "2D distributions",
+             "render": bivariate_pdf.render},
         ],
     },
     {
