@@ -163,7 +163,7 @@ def render():
                 trans_values[key] = st.slider(label, lo, hi, default, step, key=_KEY + "t_" + key)
         else:
             st.caption("No free parameters for this transform.")
-        st.latex(trans_spec["formula"])
+        # st.latex(trans_spec["formula"])
 
 
         rv = dist_spec["build"](**dist_values)
@@ -234,7 +234,7 @@ def render():
 
     with col2:
 
-        fig = plt.figure(figsize=(7.5, 7.5))
+        fig = plt.figure(figsize=(7.5, 6))
         gs = fig.add_gridspec(
             2, 2, width_ratios=[4, 1.3], height_ratios=[4, 1.3],
             wspace=0.05, hspace=0.05,
