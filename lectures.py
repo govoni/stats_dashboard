@@ -21,7 +21,7 @@ from examples import dice_frequentist, uniform_sampling, uniform_sampling_2D, un
 from examples import mean_and_sigma, skewness_kurtosys, clt, mean_uncertainty, mean_uncertainty_2
 from examples import histogram_sampler
 from examples import change_of_variables
-from examples import bivariate_pdf
+from examples import bivariate_pdf, gauss_2D
 from examples import resonance_over_fluctuations
 
 def placeholder_for(title):
@@ -46,7 +46,7 @@ LECTURES = [
         ],
     },
     {
-        "title": "Probability: continuous distributions",
+        "title": "Probability: 1D continuous distributions",
         "examples": [
             {"id": "mean_and_sigma", "title": "Mean and Sigma in 1D",
              "render": mean_and_sigma.render},
@@ -60,8 +60,15 @@ LECTURES = [
              "render": mean_uncertainty_2.render},
             {"id": "change_of_variables", "title": "1D change of variables",
              "render": change_of_variables.render},
+        ],
+    },
+    {
+        "title": "Probability: 2D continuous distributions",
+        "examples": [
             {"id": "bivariate_pdf", "title": "2D distributions",
              "render": bivariate_pdf.render},
+            {"id": "gauss_2D", "title": "2D Gaussian",
+             "render": gauss_2D.render},
         ],
     },
     {
