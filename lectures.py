@@ -23,6 +23,7 @@ from examples import histogram_sampler
 from examples import change_of_variables
 from examples import bivariate_pdf, gauss_2D
 from examples import resonance_over_fluctuations
+from examples import gaussian_mle_demo
 
 def placeholder_for(title):
     """Bind the generic placeholder module to a specific example title."""
@@ -78,6 +79,13 @@ LECTURES = [
              "render": histogram_sampler.render},
             {"id": "resonance_over_fluctuations", "title": "Resonance hunting",
              "render": resonance_over_fluctuations.render},
+        ],
+    },
+    {
+        "title": "Statistics: estimators",
+        "examples": [
+            {"id": "gaussian_mle_demo", "title": "Maximum Likelihood estimate",
+             "render": gaussian_mle_demo.render},
         ],
     },
 ]
