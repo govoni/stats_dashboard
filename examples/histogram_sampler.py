@@ -14,6 +14,9 @@ module; call render() from wherever it should appear in the page.
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
+from scipy.stats import binom, norm, uniform
+
 
 MIN_BINS = 5
 MAX_BINS = 21
@@ -21,11 +24,23 @@ N_CENTRAL_BINS = 5  # how many of the most central bins get a per-bin count plot
 STATE_KEY = "histogram_sampler"  # namespace to avoid clashing with host app state
 
 
-def _draw_samples(dist: str, low: float, high: float, mean: float, std: float, n: int) -> np.ndarray:
+def _draw_sample_set (dist: str, low: float, high: float, mean: float, std: float, n: int) -> np.ndarray:
     """Generate N samples from the chosen distribution."""
     if dist == "Gaussian":
         return np.random.normal(loc=mean, scale=std, size=n)
     return np.random.uniform(low=low, high=high, size=n)
+
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+
+
+def _calc_integral (dist: str, low: float, high: float, mean: float, std: float, mini: float, maxi: float) :
+    '''
+    in case of Gaussian, mean and std mean what they say
+    '''
+    if dist == "Gaussian": 
+        return norm.cdf (maxi, mean, std) - norm.cdf (mini, mean, std)
+    return uniform.cdf (maxi, loc=low, scale=high-low) - uniform.cdf (mini, loc=low, scale=high-low)
 
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
@@ -103,7 +118,37 @@ def _bin_count_figure (per_bin_series):
     ax.set_xlabel("count in bin")
     ax.set_ylabel("# draws")
     return fig
+
  
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+
+ 
+def _bin_count_figure_w_binomial (per_bin_series, n, p, pad=3) :
+    fig, ax = plt.subplots(figsize=(2.6, 2.6))
+    min_c = int(per_bin_series.min())
+    max_c = int(per_bin_series.max())
+
+    # one unit-width bin per integer, centered on it, 
+    # clipped to the binomial support [0, n]
+    lo = max(0, min_c - pad)
+    hi = min(n, max_c + pad)
+    ks = np.arange(lo, hi + 1)
+    edges = np.arange(lo, hi + 2) - 0.5
+
+    ax.hist(per_bin_series, bins=edges, color="steelblue",
+            edgecolor="black", linewidth=0.5, label="data")
+
+    # expected counts per integer: N_draws * Binomial(k; n, p)
+    expected = len(per_bin_series) * binom.pmf (ks, n, p)
+    ax.plot (ks, expected, "o", color="crimson", ms=3, label=f"Binom(n={n}, p={p:g})")
+
+    ax.set_xlim (edges[0], edges[-1])
+    ax.xaxis.set_major_locator (MaxNLocator(integer=True))
+    ax.set_xlabel ("count in bin")
+    ax.set_ylabel ("# draws")
+    ax.legend (fontsize=6)
+    return fig
+
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
 
@@ -165,7 +210,7 @@ def render():
             state["bin_counts"] = []
 
         def generate_sample () :
-            samples = _draw_samples(dist, low, high, mean, std, int(n))
+            samples = _draw_sample_set (dist, low, high, mean, std, int(n))
             counts, _ = np.histogram(samples, bins=bin_edges)
             state["trials"].append(samples)
             state["bin_counts"].append(counts)
@@ -202,6 +247,13 @@ def render():
             for c, i in zip(cols, central_indices):
                 with c:
                     st.markdown(f"Bin {i + 1}: [{bin_edges[i]:.2f}, {bin_edges[i+1]:.2f})")
-                    fig_b = _bin_count_figure(bin_counts_arr[:, i])
+                    # fig_b = _bin_count_figure(bin_counts_arr[:, i])
+
+
+                    # calcolare p dall'integrale sul bin della pdf di generazione 
+                    # intervallo di integrazione: bain_edges[i], bin_edges[i+1]
+                    p = _calc_integral (dist, low, high, mean, std, bin_edges[i], bin_edges[i+1])
+
+                    fig_b = _bin_count_figure_w_binomial (bin_counts_arr[:, i], n, p)
                     st.pyplot(fig_b)
                     plt.close(fig_b)
