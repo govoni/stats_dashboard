@@ -100,6 +100,65 @@ def _main_histogram_figure (trials, bin_edges, low, high):
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
 
 
+def _main_histogram_figure_violin (trials, bin_edges, low, high, showmedians=True, **kwargs) :
+    """
+    Violin plot of the per-bin event counts across repeated trials.
+
+    trials    : list of N lists, each holding the samples of one trial
+    bin_edges : array-like of the nbins+1 bin boundaries on the X axis
+    kwargs    : passed to ax.violinplot (e.g. showmeans=True)
+    """
+    fig, ax = plt.subplots (figsize=(10, 3.5))
+    if not trials:
+        ax.set_xlim (low, high)
+        ax.text (0.5, 0.5, "Press 'Generate' to draw a sample",
+                ha="center", va="center", transform=ax.transAxes, color="gray")
+    else:
+        bin_edges = np.asarray(bin_edges, dtype=float)
+        centers = 0.5 * (bin_edges[:-1] + bin_edges[1:])
+        widths = 0.9 * np.diff(bin_edges)
+
+        # counts[i, j] = number of events of trial i falling in bin j
+        counts = np.array([np.histogram(t, bins=bin_edges)[0] for t in trials])
+
+        if ax is None:
+            _, ax = plt.subplots(figsize=(9, 5))
+
+        # KDE fails on zero-variance data (e.g. a bin always empty):
+        # draw those bins as a horizontal tick instead.
+        varying = counts.std(axis=0) > 0
+        if varying.any():
+            ax.violinplot(counts[:, varying], positions=centers[varying],
+                          widths=widths[varying], showmedians=showmedians, **kwargs)
+        for j in np.where(~varying)[0]:
+            ax.hlines(counts[0, j], centers[j] - widths[j] / 2,
+                      centers[j] + widths[j] / 2, color="C0", lw=2)
+        ax.set_xlim(bin_edges[0], bin_edges[-1])
+
+
+    ax.set_xlabel("Value (X)")
+    ax.set_ylabel("count")
+    return fig
+
+'''
+
+# identifica i bin
+# loop sugli istogrammi
+# riempi pd dataframe
+
+
+df_wide = pd.DataFrame({
+...     'Bin_A': [12, 15, 14, 11],
+...     'Bin_B': [22, 19, 25, 21],
+...     'Bin_C': [5, 8, 7, 6]
+... })
+
+'''
+
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+
+
 def _bin_count_figure (per_bin_series):
     fig, ax = plt.subplots(figsize=(2.6, 2.6))
     min_c = int (per_bin_series.min())
@@ -226,7 +285,12 @@ def render():
         n_trials = len(state["trials"])
         st.caption(f"Draws so far: {n_trials}")
 
-        fig = _main_histogram_figure(state["trials"], bin_edges, low, high)
+        fig = _main_histogram_figure (state["trials"], bin_edges, low, high)
+        plt.tight_layout()
+        st.pyplot(fig)
+        plt.close(fig)
+
+        fig = _main_histogram_figure_violin (state["trials"], bin_edges, low, high)
         plt.tight_layout()
         st.pyplot(fig)
         plt.close(fig)
