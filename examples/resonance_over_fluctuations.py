@@ -15,8 +15,8 @@ def render():
 
     with col_ctrl:
         st.subheader("Event Yields")
-        n_bg = st.slider("Background Events ($N_B$)", 500, 50000, 10000, 500)
-        n_sig = st.slider("Signal Events ($N_S$)", 0, 1000, 200, 10)
+        n_bg = st.slider("Background Events ($N_B$)", 0, 50000, 0, 500)
+        n_sig = st.slider("Signal Events ($N_S$)", 0, 1000, 1000, 10)
 
         st.markdown("---")
         st.subheader("Resonance Shape")
@@ -57,16 +57,18 @@ def render():
     fig = go.Figure()
 
     # Bottom layer: Background
-    fig.add_trace(
-        go.Bar(
-            x=bin_centers,
-            y=bg_counts,
-            width=bin_width,
-            name="Uniform Background",
-            marker_color="#4A5568",  # Slate Gray
-            opacity=0.85,
+  
+    if n_bg > 0 :
+        fig.add_trace(
+            go.Bar(
+                x=bin_centers,
+                y=bg_counts,
+                width=bin_width,
+                name="Uniform Background",
+                marker_color="#4A5568",  # Slate Gray
+                opacity=0.85,
+            )
         )
-    )
 
     # Top layer: Signal stacked on top
     fig.add_trace(
@@ -88,6 +90,7 @@ def render():
         hovermode="x unified",
         margin=dict(l=10, r=10, b=10, t=20),
         legend=dict(x=0.02, y=0.95),
+        height=350,
     )
 
     with col_plot:
