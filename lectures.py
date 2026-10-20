@@ -24,6 +24,7 @@ from examples import change_of_variables, change_of_variables_MB
 from examples import bivariate_pdf, gauss_2D
 from examples import resonance_over_fluctuations
 from examples import gaussian_mle_demo
+from examples import radioactive_decay
 
 def placeholder_for(title):
     """Bind the generic placeholder module to a specific example title."""
@@ -63,6 +64,8 @@ LECTURES = [
              "render": change_of_variables.render},
             {"id": "change_of_variables_MB", "title": "Maxwell-Boltzmann",
              "render": change_of_variables_MB.render},
+            {"id": "radioactive_decay", "title": "Radioactive decay",
+             "render": radioactive_decay.render}, 
         ],
     },
     {
@@ -81,6 +84,8 @@ LECTURES = [
              "render": histogram_sampler.render},
             {"id": "resonance_over_fluctuations", "title": "Resonance hunting",
              "render": resonance_over_fluctuations.render},
+            {"id": "radioactive_decay", "title": "Radioactive decay",
+             "render": radioactive_decay.render}, 
         ],
     },
     {
