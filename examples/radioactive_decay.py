@@ -57,6 +57,8 @@ def run_decay(N0: int, tau: float, dt: float, T_obs: float) -> tuple:
 # ── render ────────────────────────────────────────────────────────────────────
 
 def render():
+    with st.container():
+        st.title ("Radioactive decay")
     # ── reset button (top-right, before widgets so it fires first) ────────────
     # A counter stored in session_state is used as the numpy seed, so clicking
     # Reset draws a new set of random numbers while leaving all parameters alone.

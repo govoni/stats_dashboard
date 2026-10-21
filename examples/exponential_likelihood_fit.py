@@ -84,6 +84,9 @@ def _graphical_crossings(lam_scan, dnll, lam_hat, target=0.5):
 # ---------------------------------------------------------------------------
 
 def render():
+    with st.container():
+        st.title ("Maximum Likelihood fit")
+
     # ---- Controls ---------------------------------------------------------
     col1, col2, col3 = st.columns(3)
     with col1:
