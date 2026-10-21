@@ -25,6 +25,7 @@ from examples import bivariate_pdf, gauss_2D
 from examples import resonance_over_fluctuations
 from examples import gaussian_mle_demo
 from examples import radioactive_decay
+from examples import exponential_likelihood_fit as exp_fit_ML
 
 def placeholder_for(title):
     """Bind the generic placeholder module to a specific example title."""
@@ -93,6 +94,8 @@ LECTURES = [
         "examples": [
             {"id": "gaussian_mle_demo", "title": "Maximum Likelihood estimate",
              "render": gaussian_mle_demo.render},
+            {"id": "exp_fit_ML", "title": "Exp likelihood fit", 
+             "render": exp_fit_ML.render},
         ],
     },
 ]
