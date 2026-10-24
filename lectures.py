@@ -21,7 +21,7 @@ from examples import dice_frequentist, uniform_sampling, uniform_sampling_2D, un
 from examples import mean_and_sigma, skewness_kurtosys, clt, mean_uncertainty, mean_uncertainty_2
 from examples import histogram_sampler
 from examples import change_of_variables, change_of_variables_MB
-from examples import bivariate_pdf, gauss_2D
+from examples import bivariate_pdf, gauss_2D, dependent_uncorrelated_2D
 from examples import resonance_over_fluctuations
 from examples import gaussian_mle_demo
 from examples import radioactive_decay
@@ -77,6 +77,9 @@ LECTURES = [
              "render": bivariate_pdf.render},
             {"id": "gauss_2D", "title": "2D Gaussian",
              "render": gauss_2D.render},
+             {"id": "dependent_uncorrelated_2D",
+             "title": "Dependece and correlation",
+             "render": dependent_uncorrelated_2D.render},
         ],
     },
     {
