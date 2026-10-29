@@ -39,3 +39,6 @@ All navigation lives in `st.session_state` (`view`, `lecture_idx`,
 `example_id`) inside `app.py`. You should not need to touch `app.py` again
 once the shell works -- all future changes are new files under `examples/`
 plus one-line registrations in `lectures.py`.
+
+streamlit run app.py
+

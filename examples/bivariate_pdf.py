@@ -1,3 +1,7 @@
+'''
+QUESTO RIMANE COME VECCHIA VERSIONE
+'''
+
 import numpy as np
 import math
 import plotly.graph_objects as go
