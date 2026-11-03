@@ -7,7 +7,7 @@ def render():
     st.header("2D Gaussian Bird's-Eye View")
 
     # --- Controls ---
-    col1, col2 = st.columns([1, 2])
+    col1, col2, col3 = st.columns([1, 2, 1])
 
     with col1:
 
@@ -15,6 +15,8 @@ def render():
         sigma_x = st.slider("sigma_x", 0.2, 3.0, 1.0, 0.1)
         sigma_y = st.slider("sigma_y", 0.2, 3.0, 1.5, 0.1)
         rho = st.slider("rho", -0.99, 0.99, 0.60, 0.01)
+
+    with col3:
 
         st.markdown(
             """
@@ -26,6 +28,7 @@ def render():
             """,
             unsafe_allow_html=True,
         )
+
 
     # --- Covariance & Eigensystem Math ---
     cov = np.array(
