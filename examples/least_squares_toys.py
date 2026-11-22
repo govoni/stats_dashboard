@@ -223,10 +223,10 @@ def render():
     std   = ests.std(ddof=1) if len(ests) > 1 else float("nan")
     th_std = _theoretical_std()
 
-    st.markdown(
-        f"**Empirical mean â:** {ests.mean():.4f} &nbsp;|&nbsp; "
-        f"**Bias:** {bias:+.4f} &nbsp;|&nbsp; "
-        f"**Empirical std:** {std:.4f} &nbsp;|&nbsp; "
-        f"**Theoretical std (σ/√Σxᵢ²):** {th_std:.4f}",
-        unsafe_allow_html=True,
-    )
+    # st.markdown(
+    #     f"**Empirical mean â:** {ests.mean():.4f} &nbsp;|&nbsp; "
+    #     f"**Bias:** {bias:+.4f} &nbsp;|&nbsp; "
+    #     f"**Empirical std:** {std:.4f} &nbsp;|&nbsp; "
+    #     f"**Theoretical std (σ/√Σxᵢ²):** {th_std:.4f}",
+    #     unsafe_allow_html=True,
+    # )

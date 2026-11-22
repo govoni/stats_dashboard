@@ -319,10 +319,10 @@ def render():
     else:
         rho_str = ""
 
-    st.markdown(
-        f"**mean â:** {as_.mean():.4f} &nbsp;|&nbsp; "
-        f"**mean b̂:** {bs_.mean():.4f} &nbsp;|&nbsp; "
-        f"{rho_str}"
-        f"**Theoretical ρ(â,b̂):** {rho_th:.3f}",
-        unsafe_allow_html=True,
-    )
+    # st.markdown(
+    #     f"**mean â:** {as_.mean():.4f} &nbsp;|&nbsp; "
+    #     f"**mean b̂:** {bs_.mean():.4f} &nbsp;|&nbsp; "
+    #     f"{rho_str}"
+    #     f"**Theoretical ρ(â,b̂):** {rho_th:.3f}",
+    #     unsafe_allow_html=True,
+    # )
