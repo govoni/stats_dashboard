@@ -27,7 +27,10 @@ from examples import gaussian_mle_demo
 from examples import radioactive_decay
 from examples import exponential_likelihood_fit as exp_fit_ML
 from examples import exponential_likelihood_many_fits as exp_fits_ML
+from examples import least_squares_toys
+from examples import least_squares_2par_toys
 from examples import faulty_generalisation
+from examples import least_squares_coverage
 
 def placeholder_for(title):
     """Bind the generic placeholder module to a specific example title."""
@@ -126,6 +129,15 @@ LECTURES = [
             {"id": "exp_fits_ML", "title": 
              "Exp max likelihood fit toys", 
              "render": exp_fits_ML.render},
+            { "id": "least_squares_toys",
+              "title": "Least-squares fit - 1 parameter",
+              "render": least_squares_toys.render},
+            { "id": "least_squares_2par",
+              "title": "Least-squares fit — 2 parameters",
+              "render": least_squares_2par_toys.render },              
+            { "id": "least_squares_coverage",
+              "title": "Graphic method & coverage",
+              "render": least_squares_coverage.render },
         ],
     },
 ]
