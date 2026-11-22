@@ -268,7 +268,7 @@ def render():
     st.title ("Least Squares and coverage")
 
     # ── Controls row ────────────────────────────────────────────────────────
-    c1, c2, c3, c4, c5, c6 = st.columns([2, 1, 1, 1, 1, 1])
+    c1, c2, c3, c4, c5= st.columns([2, 1, 1, 1, 1])
 
     with c1:
         st.markdown(
@@ -293,13 +293,13 @@ def render():
         reset = st.button("↺ Reset", use_container_width=True,
                           key="cov_reset")
 
-    with c6:
-        n_done = len(st.session_state.cov_results)
-        st.markdown(
-            f"<div style='text-align:right; padding-top:6px; color:#aaa'>"
-            f"Toys accumulated: <b style='color:white'>{n_done}</b></div>",
-            unsafe_allow_html=True,
-        )
+    # with c6:
+    #     n_done = len(st.session_state.cov_results)
+    #     st.markdown(
+    #         f"<div style='text-align:right; padding-top:6px; color:#aaa'>"
+    #         f"Toys accumulated: <b style='color:white'>{n_done}</b></div>",
+    #         unsafe_allow_html=True,
+    #     )
 
     if reset:
         _reset()
@@ -323,7 +323,7 @@ def render():
         plt.close(fig_fit)
 
     with right:
-        st.markdown("#### Δχ²(a) — graphic uncertainty method")
+        st.markdown("#### Δχ²($$\hat{\\theta}$$) — graphic uncertainty method")
         fig_chi2 = _plot_chi2(
             st.session_state.cov_last_x,
             st.session_state.cov_last_y,

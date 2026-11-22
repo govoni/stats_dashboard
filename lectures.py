@@ -31,6 +31,7 @@ from examples import least_squares_toys
 from examples import least_squares_2par_toys
 from examples import faulty_generalisation
 from examples import least_squares_coverage
+from examples import least_squares_chi2dist
 
 def placeholder_for(title):
     """Bind the generic placeholder module to a specific example title."""
@@ -130,14 +131,17 @@ LECTURES = [
              "Exp max likelihood fit toys", 
              "render": exp_fits_ML.render},
             { "id": "least_squares_toys",
-              "title": "Least-squares fit - 1 parameter",
+              "title": "Least-squares - 1 parameter",
               "render": least_squares_toys.render},
             { "id": "least_squares_2par",
-              "title": "Least-squares fit — 2 parameters",
+              "title": "Least-squares — 2 parameters",
               "render": least_squares_2par_toys.render },              
             { "id": "least_squares_coverage",
-              "title": "Graphic method & coverage",
+              "title": "Least-squares — uncertainty",
               "render": least_squares_coverage.render },
+            { "id": "least_squares_chi2dist",
+              "title": "Least-squares — χ²",
+              "render": least_squares_chi2dist.render },
         ],
     },
 ]
