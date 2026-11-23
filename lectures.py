@@ -32,6 +32,7 @@ from examples import least_squares_2par_toys
 from examples import faulty_generalisation
 from examples import least_squares_coverage
 from examples import least_squares_chi2dist
+from examples import least_squares_band
 
 def placeholder_for(title):
     """Bind the generic placeholder module to a specific example title."""
@@ -142,6 +143,9 @@ LECTURES = [
             { "id": "least_squares_chi2dist",
               "title": "Least-squares — χ²",
               "render": least_squares_chi2dist.render },
+            { "id": "least_squares_band",
+              "title": "Uncertainty band on the fitted line",
+              "render": least_squares_band.render },  
         ],
     },
 ]
