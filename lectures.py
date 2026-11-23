@@ -144,7 +144,7 @@ LECTURES = [
               "title": "Least-squares — χ²",
               "render": least_squares_chi2dist.render },
             { "id": "least_squares_band",
-              "title": "Uncertainty band on the fitted line",
+              "title": "Least-squares — extrapolation",
               "render": least_squares_band.render },  
         ],
     },
