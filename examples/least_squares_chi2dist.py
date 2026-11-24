@@ -107,6 +107,9 @@ def _reset():
 # ---------------------------------------------------------------------------
 
 def _plot_fit(x, y, a_hat, q2):
+    Y_MIN = TRUE_A * X_MIN
+    Y_MAX = TRUE_A * X_MAX
+
     """Data + best-fit line (top) and residuals (bottom)."""
     fig, (ax_top, ax_bot) = plt.subplots(
         2, 1, figsize=(5, 4.5),
@@ -127,7 +130,10 @@ def _plot_fit(x, y, a_hat, q2):
                 label=f"true a = {TRUE_A}")
     ax_top.set_ylabel("y", color="white")
     ax_top.tick_params(colors="white", labelbottom=False)
-    ax_top.set_xlim(0, X_MAX * 1.05)
+    delta_x = (X_MAX - X_MIN) * 0.05
+    ax_top.set_xlim(X_MIN - delta_x, X_MAX + delta_x)
+    # ax_top.set_xlim(X_MIN, X_MAX * 1.05)
+    ax_top.set_ylim(Y_MIN - 2 * SIGMA, Y_MAX + 2 * SIGMA)
     for spine in ax_top.spines.values():
         spine.set_edgecolor("#444")
     ax_top.legend(fontsize=8, facecolor="#1e2127", labelcolor="white",
@@ -226,9 +232,10 @@ def render():
 
     with c1:
         st.markdown(
-            f"**Model:** &nbsp; y = a·x &nbsp;|&nbsp; "
-            f"true a = {TRUE_A}, σ = {SIGMA}, "
-            f"N = {N_POINTS} pts/toy, ndf = {NDF}",
+            f"#### **Model:** &nbsp; y = a·x",
+            # f"**Model:** &nbsp; y = a·x &nbsp;|&nbsp; "
+            # f"true a = {TRUE_A}, σ = {SIGMA}, "
+            # f"N = {N_POINTS} pts/toy, ndf = {NDF}",
             unsafe_allow_html=True,
         )
 

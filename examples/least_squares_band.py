@@ -105,7 +105,6 @@ def _one_toy(rng):
     a, b = _fit(x, y)
     return x, y, a, b
 
-
 def _init_state():
     if "band_rng" not in st.session_state:
         st.session_state.band_rng = np.random.default_rng(42)
@@ -154,6 +153,9 @@ def _plot_single(x, y, a_hat, b_hat):
     y_fit   = a_hat * X_FINE + b_hat
     y_true  = TRUE_A * X_FINE + TRUE_B
 
+    Y_PLOT_MIN = TRUE_A * X_PLOT_MIN + TRUE_B - 2 * SIGMA
+    Y_PLOT_MAX = TRUE_A * X_PLOT_MAX + TRUE_B + 2 * SIGMA
+
     fig, ax = plt.subplots(figsize=(5, 4))
     fig.patch.set_facecolor("#0e1117")
     ax.set_facecolor("#0e1117")
@@ -182,6 +184,7 @@ def _plot_single(x, y, a_hat, b_hat):
             else 1.0, r"x̄", color="#888", fontsize=8, va="bottom")
 
     ax.set_xlim(X_PLOT_MIN, X_PLOT_MAX)
+    ax.set_ylim(Y_PLOT_MIN, Y_PLOT_MAX)
     ax.set_xlabel("x", color="white")
     ax.set_ylabel("y", color="white")
     ax.tick_params(colors="white")
@@ -198,6 +201,9 @@ def _plot_accumulated(fits):
     n = len(fits)
     th_band = _get_th_band()
     y_true  = TRUE_A * X_FINE + TRUE_B
+
+    Y_PLOT_MIN = TRUE_A * X_PLOT_MIN + TRUE_B - 2 * SIGMA
+    Y_PLOT_MAX = TRUE_A * X_PLOT_MAX + TRUE_B + 2 * SIGMA
 
     fig, ax = plt.subplots(figsize=(5, 4))
     fig.patch.set_facecolor("#0e1117")
@@ -235,6 +241,7 @@ def _plot_accumulated(fits):
     ax.axvline(x_bar, color="#888", lw=0.8, ls=":")
 
     ax.set_xlim(X_PLOT_MIN, X_PLOT_MAX)
+    ax.set_ylim(Y_PLOT_MIN, Y_PLOT_MAX)
     ax.set_xlabel("x", color="white")
     ax.set_ylabel("y", color="white")
     ax.set_title(f"{n} toy band{'s' if n != 1 else ''} accumulated",
@@ -262,9 +269,10 @@ def render():
 
     with c1:
         st.markdown(
-            r"**Model:** $y = a \cdot x + b$ &nbsp;|&nbsp; "
-            fr"true $a$ = {TRUE_A}, $b$ = {TRUE_B}, "
-            fr"$\sigma$ = {SIGMA}, $N$ = {N_POINTS} pts/toy",
+            r"#### **Model:** $y = a \cdot x + b$",
+            # r"**Model:** $y = a \cdot x + b$ &nbsp;|&nbsp; "
+            # fr"true $a$ = {TRUE_A}, $b$ = {TRUE_B}, "
+            # fr"$\sigma$ = {SIGMA}, $N$ = {N_POINTS} pts/toy",
             unsafe_allow_html=True,
         )
 

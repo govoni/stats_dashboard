@@ -149,6 +149,9 @@ def _reset():
 # ---------------------------------------------------------------------------
 
 def _plot_fit(x, y):
+    Y_MIN = TRUE_A * X_MIN + TRUE_B
+    Y_MAX = TRUE_A * X_MAX + TRUE_B
+
     a_hat, b_hat = _fit(x, y)
     x_line = np.array([X_MIN, X_MAX])
 

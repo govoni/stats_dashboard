@@ -132,6 +132,9 @@ def _reset():
 # ---------------------------------------------------------------------------
 
 def _plot_fit(x, y):
+    Y_MIN = TRUE_A * X_MIN
+    Y_MAX = TRUE_A * X_MAX
+
     a_hat, a_lo, a_hi = _interval(x, y)
     x_line = np.array([0.0, X_MAX])
 
@@ -149,7 +152,10 @@ def _plot_fit(x, y):
                     a_lo * x_line, a_hi * x_line,
                     color="#ff7043", alpha=0.15, label=f"1σ band")
 
-    ax.set_xlim(0, X_MAX * 1.05)
+    delta_x = (X_MAX - X_MIN) * 0.05
+    ax.set_xlim(X_MIN - delta_x, X_MAX + delta_x)
+    # ax.set_xlim(X_MIN, X_MAX * 1.05)
+    ax.set_ylim(Y_MIN - 2 * SIGMA, Y_MAX + 2 * SIGMA)
     ax.set_xlabel("x", color="white")
     ax.set_ylabel("y", color="white")
     ax.tick_params(colors="white")
@@ -272,8 +278,9 @@ def render():
 
     with c1:
         st.markdown(
-            f"**Model:** &nbsp; y = a·x &nbsp;|&nbsp; "
-            f"true a = {TRUE_A}, σ = {SIGMA}, N = {N_POINTS} pts/toy",
+            f"#### **Model:** &nbsp; y = a·x",
+            # f"**Model:** &nbsp; y = a·x &nbsp;|&nbsp; "
+            # f"true a = {TRUE_A}, σ = {SIGMA}, N = {N_POINTS} pts/toy",
             unsafe_allow_html=True,
         )
 
