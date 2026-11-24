@@ -164,7 +164,10 @@ def _plot_fit(x, y):
             color="#aed581", lw=1.5, ls="--",
             label=f"true (a={TRUE_A}, b={TRUE_B})")
 
-    ax.set_xlim(X_MIN, X_MAX * 1.05)
+    delta_x = (X_MAX - X_MIN) * 0.05
+    ax.set_xlim(X_MIN - delta_x, X_MAX + delta_x)
+    # ax.set_xlim(X_MIN, X_MAX * 1.05)
+    ax.set_ylim(Y_MIN - 2 * SIGMA, Y_MAX + 2 * SIGMA)
     ax.set_xlabel("x", color="white")
     ax.set_ylabel("y", color="white")
     ax.tick_params(colors="white")
@@ -243,12 +246,13 @@ def render():
     st.title ("Least Squares with two parameters")
 
     # ── Controls row ────────────────────────────────────────────────────────
-    c1, c2, c3, c4, c5, c6 = st.columns([2, 1, 1, 1, 1, 1])
+    c1, c2, c3, c4, c5 = st.columns([2, 1, 1, 1, 1])
 
     with c1:
         st.markdown(
-            f"**Model:** &nbsp; y = a·x + b &nbsp;|&nbsp; "
-            f"true a={TRUE_A}, b={TRUE_B}, σ={SIGMA}, N={N_POINTS} pts/toy",
+            f"#### **Model:** &nbsp; y = a·x + b",
+            # f"**Model:** &nbsp; y = a·x + b &nbsp;|&nbsp; "
+            # f"true a={TRUE_A}, b={TRUE_B}, σ={SIGMA}, N={N_POINTS} pts/toy",
             unsafe_allow_html=True,
         )
 
@@ -268,13 +272,13 @@ def render():
         reset = st.button("↺ Reset", use_container_width=True,
                           key="lsq2_reset")
 
-    with c6:
-        n_done = len(st.session_state.lsq2_as)
-        st.markdown(
-            f"<div style='text-align:right; padding-top:6px; color:#aaa'>"
-            f"Toys accumulated: <b style='color:white'>{n_done}</b></div>",
-            unsafe_allow_html=True,
-        )
+    # with c6:
+    #     n_done = len(st.session_state.lsq2_as)
+    #     st.markdown(
+    #         f"<div style='text-align:right; padding-top:6px; color:#aaa'>"
+    #         f"Toys accumulated: <b style='color:white'>{n_done}</b></div>",
+    #         unsafe_allow_html=True,
+    #     )
 
     if reset:
         _reset()
