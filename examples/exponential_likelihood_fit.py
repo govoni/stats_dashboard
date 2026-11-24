@@ -97,7 +97,7 @@ def render():
     with col2:
         n_events = st.slider(
             "Number of events",
-            min_value=5, max_value=200, value=50, step=5,
+            min_value=5, max_value=100, value=50, step=5,
         )
     with col3:
         seed = st.slider("Random seed", min_value=0, max_value=99, value=42)
