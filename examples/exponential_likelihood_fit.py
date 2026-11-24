@@ -20,7 +20,6 @@ import matplotlib.pyplot as plt
 import streamlit as st
 from iminuit import Minuit
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -55,7 +54,7 @@ def _fit(data: np.ndarray):
 
 def _profile_scan(nll_func, lam_hat: float, n_points: int = 600):
     """Return (lam_scan, delta_nll_scan) arrays."""
-    lam_scan = np.linspace(max(1e-6, lam_hat * 0.55), lam_hat * 1.45, n_points)
+    lam_scan = np.linspace(max(1e-6, lam_hat * 0.55), lam_hat * 2., n_points)
     nll_vals = np.array([nll_func(l) for l in lam_scan])
     return lam_scan, nll_vals - nll_vals.min()
 
@@ -98,7 +97,7 @@ def render():
     with col2:
         n_events = st.slider(
             "Number of events",
-            min_value=50, max_value=2000, value=500, step=50,
+            min_value=5, max_value=200, value=50, step=5,
         )
     with col3:
         seed = st.slider("Random seed", min_value=0, max_value=99, value=42)
@@ -206,6 +205,25 @@ def render():
     ax_nll.set_ylabel(r"$\Delta\,\mathrm{NLL} = \mathrm{NLL}(\lambda) - \mathrm{NLL}_{\min}$",
                       fontsize=11)
     ax_nll.set_title("Log-likelihood profile", fontsize=12)
+
+    lam_plot_min = 0
+    lam_plot_max = 10
+
+    count = 0
+    for (x,y) in zip (lam_scan, dnll):
+        if count == 2 : break
+        if y < 0.5 and count == 0 : 
+            lam_plot_min = x
+            count += 1
+        if y > 0.5 and count == 1 : 
+            lam_plot_max = x
+            count += 1
+
+    delta = (lam_plot_max - lam_plot_min)/2
+    lam_plot_min -= delta
+    lam_plot_max += delta
+
+    ax_nll.set_xlim (lam_plot_min, lam_plot_max)
     ax_nll.set_ylim(-0.05, min(3.5, dnll.max() * 1.05))
     ax_nll.legend(fontsize=8.5, loc="upper right")
     ax_nll.grid(True, alpha=0.25)
