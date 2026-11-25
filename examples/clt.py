@@ -47,7 +47,7 @@ def generate_clt_samples(dist_type, N, num_samples=30000):
 
 
 def render():
-    st.header("Central Limit Theorem")
+    st.title("Central Limit Theorem")
 
     c1, c2, c3 = st.columns(3)
 

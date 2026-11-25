@@ -4,7 +4,7 @@ import streamlit as st
 
 
 def render():
-    st.header("Resonance Discovery & Signal Significance ($S/\\sqrt{B}$)")
+    st.title("Resonance Discovery & Signal Significance ($S/\\sqrt{B}$)")
 
     # Session state seed tracker for independent pseudo-experiments
     if "exp_seed" not in st.session_state:

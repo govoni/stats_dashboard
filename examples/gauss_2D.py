@@ -4,7 +4,7 @@ import streamlit as st
 
 
 def render():
-    st.header("2D Gaussian Bird's-Eye View")
+    st.title("2D Gaussian Bird's-Eye View")
 
     # --- Controls ---
     col1, col2, col3 = st.columns([1, 2, 1])

@@ -96,7 +96,7 @@ def _curtain(fixed_val, axis, coords, heights):
 
 # ─────────────────────────────────────────────────────────────────────────────
 def render():
-    st.header("2D Probability Density Functions")
+    st.title("2D Probability Density Functions")
 
     col1, col2 = st.columns([1,2])
 

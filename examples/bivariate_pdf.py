@@ -9,7 +9,7 @@ import streamlit as st
 
 
 def render():
-    st.header("2D Probability Density Function: Independence vs. Dependence")
+    st.title("2D Probability Density Function: Independence vs. Dependence")
 
     case = st.radio(
         "Variable Relationship",

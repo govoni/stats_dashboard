@@ -9,7 +9,7 @@ def render () :
 
     and its resulting histogram/empirical density.
     """
-    st.header("Uniform Distribution Sampling")
+    st.title("Uniform Distribution Sampling")
 
     # background-color: #fff9c4; /* yellow */
     st.markdown ("""

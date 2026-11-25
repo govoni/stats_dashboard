@@ -53,7 +53,7 @@ def _log_likelihood(x: np.ndarray, mu: float, sigma: float) -> float:
 
 
 def render():
-    st.header("Maximum Likelihood Estimation: fitting a Gaussian")
+    st.title("Maximum Likelihood Estimation: fitting a Gaussian")
 
 #     st.markdown(
 #         r"""
@@ -120,13 +120,13 @@ def render():
         st.pyplot(fig1)
         plt.close(fig1)
 
-        st.metric("Log-likelihood at current (μ, σ)", f"{ll_current:.3f}")
-        if show_mle:
-            st.metric("Log-likelihood at the MLE", f"{ll_at_mle:.3f}")
-            st.caption(
-                f"MLE: μ̂ = {mu_hat:.3f} (sample mean),  "
-                f"σ̂ = {sigma_hat:.3f} (sample std, 1/n convention)"
-            )
+        # st.metric("Log-likelihood at current (μ, σ)", f"{ll_current:.3f}")
+        # if show_mle:
+        #     st.metric("Log-likelihood at the MLE", f"{ll_at_mle:.3f}")
+        #     st.caption(
+        #         f"MLE: μ̂ = {mu_hat:.3f} (sample mean),  "
+        #         f"σ̂ = {sigma_hat:.3f} (sample std, 1/n convention)"
+        #     )
 
     # --- right panel: 2D log-likelihood surface --------------------
     with col2:
