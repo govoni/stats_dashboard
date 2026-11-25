@@ -33,6 +33,10 @@ from examples import faulty_generalisation
 from examples import least_squares_coverage
 from examples import least_squares_chi2dist
 from examples import least_squares_band
+from examples import neyman_belt_poisson
+from examples import neyman_belt_gaussian
+from examples import neyman_belt_propgaussian
+from examples import neyman_belt_all
 
 def placeholder_for(title):
     """Bind the generic placeholder module to a specific example title."""
@@ -146,6 +150,34 @@ LECTURES = [
             { "id": "least_squares_band",
               "title": "Least-squares — extrapolation",
               "render": least_squares_band.render },  
+        ],
+    },
+    {
+        "title": "Statistics: hypothesis testing",
+        "examples": [
+            { "id": "least_squares_chi2dist",
+              "title": "Least-squares — χ²",
+              "render": least_squares_chi2dist.render },
+        ],
+    },
+    {
+        "title": "Statistics: coverage",
+        "examples": [
+            { "id": "least_squares_coverage",
+              "title": "Least-squares — uncertainty",
+              "render": least_squares_coverage.render },
+            { "id": "neyman_belt",
+              "title": "Neyman belt",
+              "render": neyman_belt_all.render },
+            # { "id": "neyman_belt_poisson",
+            #   "title": "Neyman belt - Poisson",
+            #   "render": neyman_belt_poisson.render },
+            # { "id": "neyman_belt_gaussian",
+            #   "title": "Neyman belt — Gaussian observable",
+            #   "render": neyman_belt_gaussian.render },
+            # { "id": "neyman_belt_propgaussian",
+            #   "title": "Neyman belt — proportional σ",
+            #   "render": neyman_belt_propgaussian.render },
         ],
     },
 ]
